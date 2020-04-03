@@ -6,6 +6,12 @@
 using namespace std;
 
 int main(){
+	vector<string> a;
+	string fn1="a.txt";
+	string fn2="b.txt";
+	a=readtxt(fn1);
+	writetxt(fn2,a);
+
 	while(true){
 		string input;
 		print_prompt();

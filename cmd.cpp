@@ -24,7 +24,7 @@ void analy_cmd(string input){
 }
 
 void do_cmd(string cmd,string option,string argument){
-    if(cmd=="quit")cmd_quit();
+    if(cmd=="quit"||cmd=="layout"||cmd=="exit")cmd_quit();
     else input_error(cmd);
     return;
 }
