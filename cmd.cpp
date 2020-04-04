@@ -1,5 +1,6 @@
 #include"cmd.h"
 #include"interface.h"
+#include"information.h"
 #include<regex>
 #include<string>
 #include<iostream>
@@ -25,13 +26,54 @@ void analy_cmd(string input){
 
 void do_cmd(string cmd,string option,string argument){
     if(cmd=="quit"||cmd=="layout"||cmd=="exit")cmd_quit();
+    else if(cmd=="wc")analy_cmd_wc(option,argument);
     else input_error(cmd);
     return;
 }
 
-
-
 void cmd_quit(){
     cout<<"Successful to quit\n";
     exit(0);
+}
+
+
+void analy_cmd_wc(string option,string argument){
+    if(option=="-c"){
+        cmd_wc_c(argument);
+    }
+    else if(option=="-w"){
+        cmd_wc_w(argument);
+    }
+    else if(option=="-l"){
+        cmd_wc_l(argument);
+    }
+    else {
+        cout<<"No such command:"<<option<<endl;
+        cout<<"Do you mean \'wc -c "<<argument<<"\'"<<endl;
+        cout<<"         or \'wc -w "<<argument<<"\'"<<endl;
+        cout<<"         or \'wc -l "<<argument<<"\'"<<endl;
+    }
+    return;    
+}
+
+void cmd_wc_c(string argument){
+    vector<string> content=readtxt(argument);
+    if(content.empty()){cout<<"The file can't be opened\n";return;}
+    int count=coun_byte(content);
+    cout<<count<<" "<<argument<<endl;
+    return;
+}
+void cmd_wc_w(string argument){
+    vector<string> content=readtxt(argument);
+    if(content.empty()){cout<<"The file can't be opened\n";return;}
+    int count=coun_words(content);
+    cout<<count<<" "<<argument<<endl;
+    return;
+}
+void cmd_wc_l(string argument){
+    vector<string> content=readtxt(argument);
+    if(content.empty()){cout<<"The file can't be opened\n";return;}
+    int count=coun_lines(content);
+    cout<<count<<" "<<argument<<endl;
+    return;
 }

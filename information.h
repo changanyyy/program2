@@ -10,9 +10,9 @@ vector<string> readtxt(string filename);
 void writetxt(string filename,vector<string> content);
 
 
-
-
-
+int coun_byte(vector<string> content);
+int coun_words(vector<string> content);
+int coun_lines(vector<string> content);
 
 
 
