@@ -11,22 +11,25 @@ void analy_cmd(string input){
     string cmd;
     string option;
     string argument;
-    regex pattern("([a-zA-Z]+) ?(-[a-z])? ?(.*)?");
+    string argument_app;
+    regex pattern("([a-zA-Z]+) ?(-[a-z])? ?(\\S+)? ?(\\S+)?");
 	smatch result;
 	bool ismatch = regex_search(input, result, pattern);
     if(ismatch){
         cmd=result[1];
         option=result[2];
         argument=result[3];
-        do_cmd(cmd,option,argument);
+        argument_app=result[4];
+        do_cmd(cmd,option,argument,argument_app);
     }
     else input_error(input);
     return;
 }
 
-void do_cmd(string cmd,string option,string argument){
+void do_cmd(string cmd,string option,string argument,string argument_app){
     if(cmd=="quit"||cmd=="layout"||cmd=="exit")cmd_quit();
     else if(cmd=="wc")analy_cmd_wc(option,argument);
+    else if(cmd=="cmp")analy_cmd_cmp(argument,argument_app);
     else input_error(cmd);
     return;
 }
@@ -75,5 +78,20 @@ void cmd_wc_l(string argument){
     if(content.empty()){cout<<"The file can't be opened\n";return;}
     int count=coun_lines(content);
     cout<<count<<" "<<argument<<endl;
+    return;
+}
+
+void analy_cmd_cmp(string argument,string argument_app){
+    if(argument_app.empty()||argument_app.empty()){cout<<"File open failed!"<<endl;return;}
+    else cmd_cmp(argument,argument_app);
+    return;
+}
+void cmd_cmp(string argument,string argument_app){
+    vector<string> file1;
+    vector<string> file2;
+    file1=readtxt(argument);
+    file2=readtxt(argument_app);
+    int equal=cmp_string(argument,argument_app,file1,file2);
+    cout<<equal;
     return;
 }
