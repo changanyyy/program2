@@ -4,6 +4,8 @@
 #include<regex>
 #include<string>
 #include<iostream>
+#include<sys/stat.h>
+#include<dirent.h>
 using namespace std;
 
 
@@ -20,17 +22,18 @@ void analy_cmd(string input){
         option=result[2];
         argument=result[3];
         argument_app=result[4];
-        do_cmd(cmd,option,argument,argument_app);
+        do_cmd(input,cmd,option,argument,argument_app);
     }
     else input_error(input);
     return;
 }
 
-void do_cmd(string cmd,string option,string argument,string argument_app){
+void do_cmd(string input,string cmd,string option,string argument,string argument_app){
     if(cmd=="quit"||cmd=="layout"||cmd=="exit")cmd_quit();
     else if(cmd=="wc")analy_cmd_wc(option,argument);
     else if(cmd=="cmp")analy_cmd_cmp(argument,argument_app);
-    else input_error(cmd);
+    else if(cmd=="cat")analy_cmd_cat(argument);
+    else input_error(input);
     return;
 }
 
@@ -93,5 +96,24 @@ void cmd_cmp(string argument,string argument_app){
     file2=readtxt(argument_app);
     int equal=cmp_string(argument,argument_app,file1,file2);
     cout<<equal;
+    return;
+}
+
+void analy_cmd_cat(string argument){
+    struct stat path;
+    if(argument.empty())cout<< "what do you want to cat?"<<endl;
+    stat(argument.c_str(), &path);
+    if (path.st_mode & S_IFDIR) 
+        cout << "cat: " << argument << ": Is a directory" << endl;
+    else if (path.st_mode & S_IFREG) 
+        cmd_cat(argument);
+    else 
+        cout << "cat: " << argument << ": No such file or directory" << endl;
+    return;
+}
+void cmd_cat(string argument){
+    vector<string> content;
+    content=readtxt(argument);
+    printfile(content);
     return;
 }

@@ -6,7 +6,7 @@ using namespace std;
 
 void analy_cmd(string input);
 
-void do_cmd(string cmd,string option,string argument,string argument_app);
+void do_cmd(string input,string cmd,string option,string argument,string argument_app);
 
 void cmd_quit();
 
@@ -17,6 +17,9 @@ void cmd_wc_l(string argument);
 
 void analy_cmd_cmp(string argument,string argument_app);
 void cmd_cmp(string argument,string argument_app);
+
+void analy_cmd_cat(string arguement);
+void cmd_cat(string argument);
 
 
 #endif !_CMD_H

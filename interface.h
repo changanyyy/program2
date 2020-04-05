@@ -1,13 +1,17 @@
 #ifndef _INTERFACE_H
 #define _INTERFACE_H
 #include<string>
+#include<vector>
+using namespace std;
 
 //输出交互界面
 void print_prompt();	
 
-std::string get_inputs();
+string get_inputs();
 
-void input_error(std::string input);
+void input_error(string input);
+
+void printfile(vector<string> content);
 
 
 

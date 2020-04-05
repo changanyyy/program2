@@ -2,10 +2,14 @@
 #include"interface.h"
 #include"cmd.h"
 #include<string>
+#include<unistd.h>
+
 
 using namespace std;
 void print_prompt(){
-    cout<<"MyShell$ ";
+    char* a=new char[1000];
+    getcwd(a,1000);
+    cout<<"xizhe@MyShell:"<<a<<"$";
     return ;
 }
 
@@ -23,6 +27,15 @@ string get_inputs(){
 }
 
 void input_error(string input){
+    if(input.empty())return;
     cout<<input<<":command not found\n";
     return ;
+}
+
+
+void printfile(vector<string> content){
+    for(int i=0;i<content.size();i++){
+        cout<<content[i]<<endl;
+    }
+    return;
 }
