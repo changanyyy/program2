@@ -21,5 +21,9 @@ void cmd_cmp(string argument,string argument_app);
 void analy_cmd_cat(string arguement);
 void cmd_cat(string argument);
 
+void analy_cmd_cp(string option,string argument,string argument_app);
+void cmd_copy_file(string option,string argument, string argument_app);
+void cmd_cp_directory(string argument, string argument_app);
+
 
 #endif !_CMD_H

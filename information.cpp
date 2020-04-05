@@ -84,3 +84,19 @@ int cmp_string(string filename1,string filename2,vector<string> a, vector<string
     if (end == 1)cout <<filename1<<" "<<filename2<<" differ: byte 1 line " << min_size + 1;
     else return 0;
 }
+
+void copy_file(string argument, string argument_app) {
+    ifstream in;
+    in.open(argument, ios::in | ios::binary);
+    in.seekg(0, ios::end);
+    int size = in.tellg();
+    char* content = new char[size + 1];
+    in.seekg(0, ios::beg);
+    in.read(content, size);
+    in.close();
+    ofstream out;
+    out.open(argument_app, ios::out | ios::binary);
+    if (out.is_open()) { out.write(content, size); out.close(); }
+    else cout << "Copy file failed" << endl;
+    return;
+}
