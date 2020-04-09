@@ -7,6 +7,7 @@
 #include<fstream>
 #include<sys/stat.h>
 #include<dirent.h>
+#include<unistd.h>
 using namespace std;
 
 
@@ -36,7 +37,20 @@ void do_cmd(string input,string cmd,string option,string argument,string argumen
     else if(cmd=="cmp")analy_cmd_cmp(argument,argument_app);
     else if(cmd=="cat")analy_cmd_cat(option,argument);
     else if(cmd=="cp")analy_cmd_cp(option,argument,argument_app);
+    else if(cmd=="pwd")cmd_pwd();
+    else if(cmd=="echo")cmd_echo(argument);
     else input_error(input);
+    return;
+}
+
+void cmd_echo(string argument){
+    cout<<argument<<endl;
+}
+
+void cmd_pwd(){
+    char* a=new char[1000];
+    getcwd(a,1000);
+    cout<<a<<endl;
     return;
 }
 

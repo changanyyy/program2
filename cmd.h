@@ -10,6 +10,8 @@ void do_cmd(string input,string cmd,string option,string argument,string argumen
 
 void cmd_quit();
 
+void cmd_pwd();
+
 void analy_cmd_wc(string option,string argument);
 void cmd_wc_c(string argument);
 void cmd_wc_w(string argument);
@@ -25,6 +27,8 @@ bool check_blank(string s);
 void analy_cmd_cp(string option,string argument,string argument_app);
 void cmd_copy_file(string option,string argument, string argument_app);
 void cmd_cp_directory(string argument, string argument_app);
+
+void cmd_echo(string argument);
 
 
 #endif !_CMD_H
