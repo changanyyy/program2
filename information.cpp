@@ -100,3 +100,15 @@ void copy_file(string argument, string argument_app) {
     else cout << "Copy file failed" << endl;
     return;
 }
+
+
+
+string get_cur_name(string argument) {
+    string file_name;
+    int i = argument.size() - 1;
+    while (i != -1 && argument[i] != '/') {
+        file_name.push_back(argument[i--]);
+    }
+    reverse(file_name.begin(), file_name.end());
+    return file_name;
+}

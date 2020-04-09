@@ -98,7 +98,6 @@ void cmd_cmp(string argument,string argument_app){
     file1=readtxt(argument);
     file2=readtxt(argument_app);
     int equal=cmp_string(argument,argument_app,file1,file2);
-    cout<<equal;
     return;
 }
 
@@ -108,7 +107,7 @@ void analy_cmd_cat(string option,string argument){
         return;
     }
     struct stat path;
-    if(argument.empty())cout<< "what do you want to cat?"<<endl;
+    if(argument.empty()){cout<< "what do you want to cat?"<<endl;return;}
     stat(argument.c_str(), &path);
     if (S_ISDIR(path.st_mode)) 
         cout << "cat: " << argument << ": Is a directory" << endl;
@@ -156,9 +155,10 @@ void cmd_copy_file(string option,string argument, string argument_app) {
         if (fout.is_open()) {
             if (option=="-i") {
                 cout << "cp: overwrite \'"<<argument_app << "\'? ";
-                string answer;
-                cin>>answer;
-                if (!(answer=="Y"||answer=="y")){fout.close();return;}
+                char ans;
+                ans=getchar();
+                if (!(ans=='Y'||ans=='y')){ans=getchar();fout.close();return;}
+                ans=getchar();
             }
             fout.close();
         }
@@ -170,20 +170,46 @@ void cmd_copy_file(string option,string argument, string argument_app) {
 
 
 void analy_cmd_cp(string option,string argument,string argument_app){
+    if(option!="-i"&&option!="-r"&&!option.empty()){
+        cout<<"cp: invalid option -- \'c\'"<<option<<"\nTry \'cp --help\' for more information.\n";
+    }
     struct stat judge1;
     struct stat judge2;
     stat(argument.c_str(),&judge1);
     stat(argument_app.c_str(),&judge2);
-    if(S_ISDIR(judge1.st_mode) && S_ISDIR(judge2.st_mode)){
-        if(option=="-r")cmd_cp_directory(argument,argument_app);
-        else cout<<"cp: -r not specified; omitting directory \'"<<argument<<"\'";
+    if(S_ISDIR(judge1.st_mode) && S_ISDIR(judge2.st_mode)){//如果两个参数都是文件夹
+        if(option=="-r"){
+            string dirname=get_cur_name(argument);//获得要拷贝的文件夹名字
+            string main=argument_app+"/"+dirname;//要创建的外层文件夹名字
+            int a=mkdir(main.c_str(),0755);//创建文件夹
+            if(a!=0){cout<<"can't make direct"<<endl;return;}
+            cmd_cp_directory(argument,main);
+        }
+        else cout<<"cp: -r not specified; omitting directory \'"<<argument<<"\'"<<endl;
+        return;
     }
     else if(S_ISREG(judge1.st_mode) && S_ISREG(judge2.st_mode)){
         cmd_copy_file(option,argument,argument_app);
+        return;
     }
     else if(S_ISDIR(judge1.st_mode) && S_ISREG(judge2.st_mode)){
-        if(option=="-r")cout<<"cp: cannot overwrite non-directory \'"<<argument_app<<"\' with directory \'"<<argument;
-        else cout<<"cp: -r not specified; omitting directory \'"<<argument<<"\'";
+        if(option=="-r")cout<<"cp: cannot overwrite non-directory \'"<<argument_app<<"\' with directory \'"<<argument<<endl;
+        else cout<<"cp: -r not specified; omitting directory \'"<<argument<<"\'"<<endl;
+        return;
+    }
+    else if(S_ISREG(judge1.st_mode) && S_ISDIR(judge2.st_mode)){
+        string filename=get_cur_name(argument);
+        string dest=argument_app+"/"+filename;
+        cmd_copy_file(option,argument,dest);
+        return;
+    }
+    else if(!S_ISREG(judge1.st_mode) && !S_ISDIR(judge1.st_mode)){
+        cout<<"cp: cannot stat \'"<<argument<<"\': No such file or directory";
+        return;
+    }
+    else if(S_ISREG(judge1.st_mode)){
+        cmd_copy_file(option,argument,argument_app);
+        return;
     }
     return;
 }

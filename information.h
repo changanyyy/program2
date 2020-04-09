@@ -2,7 +2,9 @@
 #define _INFORMATION_H
 #include<vector>
 #include<string>
+
 using namespace std;
+
 
 
 vector<string> readtxt(string filename);
@@ -17,5 +19,9 @@ int coun_lines(vector<string> content);
 int cmp_string(string filename1,string filename2,vector<string> a,vector<string> b);
 
 void copy_file(string argument, string argument_app);
+
+
+string get_cur_name(string argument);
+
 
 #endif !_INFORMATION_H
