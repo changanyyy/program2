@@ -10,12 +10,13 @@
 using namespace std;
 
 
+
 void analy_cmd(string input){
     string cmd;
     string option;
     string argument;
     string argument_app;
-    regex pattern("([a-zA-Z]+) ?(-[a-z])? ?(\\S+)? ?(\\S+)?");
+    regex pattern("([a-zA-Z]+) ?(-[a-zA-Z])? ?(\\S+)? ?(\\S+)?");
 	smatch result;
 	bool ismatch = regex_search(input, result, pattern);
     if(ismatch){
@@ -33,7 +34,7 @@ void do_cmd(string input,string cmd,string option,string argument,string argumen
     if(cmd=="quit"||cmd=="layout"||cmd=="exit")cmd_quit();
     else if(cmd=="wc")analy_cmd_wc(option,argument);
     else if(cmd=="cmp")analy_cmd_cmp(argument,argument_app);
-    else if(cmd=="cat")analy_cmd_cat(argument);
+    else if(cmd=="cat")analy_cmd_cat(option,argument);
     else if(cmd=="cp")analy_cmd_cp(option,argument,argument_app);
     else input_error(input);
     return;
@@ -101,24 +102,50 @@ void cmd_cmp(string argument,string argument_app){
     return;
 }
 
-void analy_cmd_cat(string argument){
+void analy_cmd_cat(string option,string argument){
+    if(option!="-E"&&option!="-b"&&option!="-s"&&option!="-n"&&!option.empty()){
+        cout<<"cat: invalid option -- \'"<<option<<"\'\nTry \'cat --help\' for more information.\n";
+        return;
+    }
     struct stat path;
     if(argument.empty())cout<< "what do you want to cat?"<<endl;
     stat(argument.c_str(), &path);
-    if (path.st_mode & S_IFDIR) 
+    if (S_ISDIR(path.st_mode)) 
         cout << "cat: " << argument << ": Is a directory" << endl;
-    else if (path.st_mode & S_IFREG) 
-        cmd_cat(argument);
+    ifstream file(argument);
+    if(file.is_open()){
+        file.close(); 
+        cmd_cat(option,argument);
+    }
     else 
         cout << "cat: " << argument << ": No such file or directory" << endl;
     return;
 }
-void cmd_cat(string argument){
+void cmd_cat(string option,string argument){
     vector<string> content;
     content=readtxt(argument);
-    printfile(content);
+    int num=0;
+    for(int i=0;i<content.size();i++){
+        if (option=="-s"){
+            if(i!=0){
+                if(check_blank(content[i])&&check_blank(content[i-1]))continue;
+            }
+        }
+        else if (option=="-b"&&!check_blank(content[i])) cout << ++num << " ";
+        else if (option=="-n") cout << ++num << " ";
+        cout << content[i];
+        if (option=="-E") cout << "$";
+        cout << endl;
+    }
     return;
 }
+bool check_blank(string s){
+    for(int i=0;i<s.size();i++){
+        if(s[i]!=' '&&s[i]!='\t')return false;
+    }
+    return true;
+}
+
 
 void cmd_copy_file(string option,string argument, string argument_app) {
     ifstream in;

@@ -18,8 +18,9 @@ void cmd_wc_l(string argument);
 void analy_cmd_cmp(string argument,string argument_app);
 void cmd_cmp(string argument,string argument_app);
 
-void analy_cmd_cat(string arguement);
-void cmd_cat(string argument);
+void analy_cmd_cat(string option,string arguement);
+void cmd_cat(string option,string argument);
+bool check_blank(string s);
 
 void analy_cmd_cp(string option,string argument,string argument_app);
 void cmd_copy_file(string option,string argument, string argument_app);
