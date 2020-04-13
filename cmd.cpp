@@ -39,6 +39,8 @@ void do_cmd(string input,string cmd,string option,string argument,string argumen
     else if(cmd=="cp")analy_cmd_cp(option,argument,argument_app);
     else if(cmd=="pwd")cmd_pwd();
     else if(cmd=="echo")cmd_echo(argument);
+    else if(cmd=="ls")analy_cmd_ls(option,argument);
+    else if(cmd=="mkdir")analy_cmd_mkdir(option,argument);
     else input_error(input);
     return;
 }
@@ -62,57 +64,78 @@ void cmd_quit(){
 
 void analy_cmd_wc(string option,string argument){
     if(option=="-c"){
-        cmd_wc_c(argument);
+        int n=cmd_wc_c(argument);
+        if(n==-1)return;
+        cout<<n<<" "<<argument<<endl;
     }
     else if(option=="-w"){
-        cmd_wc_w(argument);
+        int n=cmd_wc_w(argument);
+        if(n==-1)return;
+        cout<<n<<" "<<argument<<endl;
     }
     else if(option=="-l"){
-        cmd_wc_l(argument);
+        int n=cmd_wc_l(argument);
+        if(n==-1)return;
+        cout<<n<<" "<<argument<<endl;
     }
     else {
-        cout<<"No such command:"<<option<<endl;
-        cout<<"Do you mean \'wc -c "<<argument<<"\'"<<endl;
-        cout<<"         or \'wc -w "<<argument<<"\'"<<endl;
-        cout<<"         or \'wc -l "<<argument<<"\'"<<endl;
+        int a=cmd_wc_l(argument);
+        if(a==-1)return;
+        int b=cmd_wc_w(argument);
+        int c=cmd_wc_c(argument);
+        cout<<a<<" "<<b<<" "<<c<<" "<<argument<<endl;
     }
     return;    
 }
 
-void cmd_wc_c(string argument){
+int cmd_wc_c(string argument){
     vector<string> content=readtxt(argument);
-    if(content.empty()){cout<<"The file can't be opened\n";return;}
+    if(content.empty()){return -1;}
     int count=coun_byte(content);
-    cout<<count<<" "<<argument<<endl;
-    return;
+    count+=content.size()-1;
+    return count;
 }
-void cmd_wc_w(string argument){
+int cmd_wc_w(string argument){
     vector<string> content=readtxt(argument);
-    if(content.empty()){cout<<"The file can't be opened\n";return;}
+    if(content.empty()){return -1;}
     int count=coun_words(content);
-    cout<<count<<" "<<argument<<endl;
-    return;
+    return count;
 }
-void cmd_wc_l(string argument){
+int cmd_wc_l(string argument){
     vector<string> content=readtxt(argument);
-    if(content.empty()){cout<<"The file can't be opened\n";return;}
+    if(content.empty()){return -1;}
     int count=coun_lines(content);
-    cout<<count<<" "<<argument<<endl;
-    return;
+    return count-1;
 }
 
 void analy_cmd_cmp(string argument,string argument_app){
-    if(argument_app.empty()||argument_app.empty()){cout<<"File open failed!"<<endl;return;}
+    if(argument_app.empty()||argument_app.empty()){cout<<"What do you want to compare???"<<endl;return;}
     else cmd_cmp(argument,argument_app);
     return;
 }
 void cmd_cmp(string argument,string argument_app){
-    vector<string> file1;
-    vector<string> file2;
-    file1=readtxt(argument);
-    file2=readtxt(argument_app);
+    string file1;
+    string file2;
+    file1=readfile_cmp(argument);
+    file2=readfile_cmp(argument_app);
+    if(!file1.empty()&&!file2.empty()){
     int equal=cmp_string(argument,argument_app,file1,file2);
+    }
     return;
+}
+string readfile_cmp(string argument){
+    string a;
+    ifstream fin;
+    fin.open(argument,ios::in);
+    if(!fin){fin.close();cout<<"cmp: "<<argument<<": No such file or directory"<<endl ; return a ; }
+    FILE* file=fopen(argument.c_str(),"r");
+    fseek(file,0,SEEK_END);
+    int size=ftell(file);
+    char* buffer=new char[size];
+    fseek(file,0,SEEK_SET);
+    fread(buffer,size,1,file);
+    a=buffer;
+    return a;
 }
 
 void analy_cmd_cat(string option,string argument){
@@ -142,17 +165,18 @@ void cmd_cat(string option,string argument){
         if (option=="-s"){
             if(i!=0){
                 if(check_blank(content[i])&&check_blank(content[i-1]))continue;
-            }
+           }
         }
         else if (option=="-b"&&!check_blank(content[i])) cout << ++num << " ";
         else if (option=="-n") cout << ++num << " ";
         cout << content[i];
-        if (option=="-E") cout << "$";
+        if(option=="-E")cout<<"$";
         cout << endl;
     }
     return;
 }
 bool check_blank(string s){
+    if(s.size()==0)return true;
     for(int i=0;i<s.size();i++){
         if(s[i]!=' '&&s[i]!='\t')return false;
     }
@@ -264,4 +288,59 @@ void cmd_cp_directory(string argument, string argument_app) {
     //打不开的情况
     else cout << "cp: cannot stat \'"<<argument<< "\': No such file or directory" << endl;
     closedir(direct);
+}
+
+
+void analy_cmd_mkdir(string option,string argument){
+    if(!option.empty()){cout<<"mkdir: invalid option -- \'"<<option<<"\'\nTry 'mkdir --help' for more information.\n";return;}
+    if(argument.empty()){cout<<"mkdir: missing operand\nTry 'mkdir --help' for more information.\n";return;}
+    else cmd_mkdir(argument);
+    return;
+}
+
+void cmd_mkdir(string argument){
+    int a=mkdir(argument.c_str(),0755);//创建文件夹
+    if(a!=0){cout<<"mkdir: cannot create directory \'"+argument+"\'"<<endl;return;}
+    return;
+}
+
+void analy_cmd_ls(string option,string argument){
+    char* a=new char[1000];
+    if(argument.empty()){
+        getcwd(a,1000);
+        argument=a;
+    }
+    if(!option.empty()&&option!="-a"&&option!="-r"){
+        cout<<"ls: invalid option -- \'"<<option<<"\'Try \'ls --help\' for more information.\n";
+        return;
+    }
+    cmd_ls(option,argument);
+}
+
+void cmd_ls(string option,string argument){
+    vector<string> sub;
+    bool a=false;
+    if(option=="-a")a=true;
+    DIR* direct;
+    direct=opendir(argument.c_str());
+    if (NULL!=direct) {
+        dirent* subdirect;
+        while(subdirect=readdir(direct)){
+            string temp=subdirect->d_name;
+            if(!a){
+                if(temp[0]=='.')continue;
+            }
+            sub.push_back(temp);
+        }
+    }
+    else{
+        cout<<"ls: cannot access \'"<<argument<<"\': No such file or directory";
+        return;
+    }
+    if(option=="-r")reverse(sub.begin(),sub.end());
+    for(int i=0;i<sub.size();i++){
+        cout<<sub[i]<<"  ";
+        if(i%8==0&&i>0)cout<<endl;
+    }
+    return;
 }

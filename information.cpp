@@ -12,7 +12,7 @@ vector<string> readtxt(string filename){
     vector<string> content;
     ifstream fin;
     fin.open(filename,ios::in);
-    if(!fin){cout<<filename<<"can't be opened"<<endl ; return content ; }//返回空向量
+    if(!fin){cout<<filename<<": No such file or directory"<<endl ; return content ; }//返回空向量
     while(!fin.eof()){
         string temp;
         getline(fin,temp);
@@ -25,7 +25,7 @@ vector<string> readtxt(string filename){
 void writetxt(string filename,vector<string> content){
     ofstream fout;
     fout.open(filename,ios::out);
-    if(!fout){printf("%s can't be opened\n",filename.c_str()) ; return ;}
+    if(!fout){printf("%s  can't be opened\n",filename.c_str()) ; return ;}
     for(auto it=content.begin();it!=content.end();it++){
         fout<<*it<<endl;
     }
@@ -60,29 +60,33 @@ int coun_lines(vector<string> content){
 }
 
 
-int cmp_string(string filename1,string filename2,vector<string> a, vector<string> b) {
-    int size1 = a.size();
-    int size2 = b.size();
-    int end=0;
-    int min_size=min(size1,size2);
-    if (size1 != size2) { end = 1; }
-    int line = min(size1, size2);
-    for (int i = 0; i < line; i++) {
-        int len1 = a[i].size();
-        int len2 = b[i].size();
-        int max_len = max(len1, len2);
-        string app(abs(len1 - len2), '&');
-        if (len1 > len2) b[i] += app;
-        else if (len1 < len2)a[i] += app;
-        for (int j = 0; j < max_len; j++) {
-            if (a[i][j] != b[i][j]) {
-                cout <<filename1<<" "<<filename2<<" differ: byte " << j+1 << " line " << i+1 << endl;
-                return -1;
-            }
+int cmp_string(string filename1,string filename2,string a, string b) {
+    vector<string> s1=readtxt(filename1);
+    vector<string> s2=readtxt(filename2);
+    int size1=0,size2=0;
+    for(int i=0;i<s1.size();i++){
+        size1+=s1[i].size();
+    }
+     for(int i=0;i<s2.size();i++){
+        size2+=s2[i].size();
+    }
+    int min_size=min(a.size(),b.size());
+    int line=0;
+    int i;
+    for(i=0;i<min_size;i++){
+        if(a[i]!=b[i]){
+            cout<<filename1<<" "<<filename2<<" differ: byte "<<i+1<<" line "<<line+1<<endl;
+            return -1;
+        }
+        if(a[i]=='\n'){
+            line++;
         }
     }
-    if (end == 1)cout <<filename1<<" "<<filename2<<" differ: byte 1 line " << min_size + 1;
-    else return 0;
+    if(size1!=size2){
+        if(size1>size2){cout<<"cmp: EOF on "<<filename2<<" after byte "<<i<<", in line"<<line+1<<endl;return -1;}
+        else if(size1<size2){cout<<"cmp: EOF on "<<filename1<<" after byte "<<i<<", in line"<<line+1<<endl;return -1;}
+    }
+    return 0;
 }
 
 void copy_file(string argument, string argument_app) {

@@ -16,7 +16,7 @@ int coun_byte(vector<string> content);
 int coun_words(vector<string> content);
 int coun_lines(vector<string> content);
 
-int cmp_string(string filename1,string filename2,vector<string> a,vector<string> b);
+int cmp_string(string filename1,string filename2,string a,string b);
 
 void copy_file(string argument, string argument_app);
 
