@@ -1,0 +1,11 @@
+
+==================================================
+NAME
+       cd - change current directory
+
+SYNOPSIS
+       cd DIRECTORY
+
+DESCRIPTION
+       Displays the name of the current directory or changes the current folder.
+==================================================

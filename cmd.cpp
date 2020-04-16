@@ -43,6 +43,7 @@ void do_cmd(string input,string cmd,string option,string argument,string argumen
     else if(cmd=="ls")analy_cmd_ls(option,argument);
     else if(cmd=="mkdir")analy_cmd_mkdir(option,argument);
     else if(cmd=="man")analy_cmd_man(option,argument);
+    else if(cmd=="sh")cmd_sh(option,argument);
     else input_error(input);
     return;
 }
@@ -382,6 +383,15 @@ void analy_cmd_cd(string option,string argument){
         else if(!S_ISDIR(s.st_mode)){cout<<"bash: cd: "<<argument<<": Not a directory";return;}
         int a=chdir(argument.c_str());
         if(a==-1){cout<<"bash: cd: "<<argument<<": No such file or directory";}
+    }
+    return;
+}
+
+void cmd_sh(string option,string argument){
+    if(!option.empty()){cout<<"sh: 0: Illegal option "<<option<<endl;return;}
+    vector<string> cmd=readtxt(argument);
+    for(int i=0;i<cmd.size();i++){
+        analy_cmd(cmd[i]);
     }
     return;
 }

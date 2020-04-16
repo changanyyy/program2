@@ -42,4 +42,6 @@ void analy_cmd_man(string option,string argument);
 
 void analy_cmd_cd(string option,string argument);
 
+void cmd_sh(string option,string argument);
+
 #endif !_CMD_H
