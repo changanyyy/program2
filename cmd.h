@@ -29,13 +29,16 @@ void analy_cmd_cp(string option,string argument,string argument_app);
 void cmd_copy_file(string option,string argument, string argument_app);
 void cmd_cp_directory(string argument, string argument_app);
 
-void cmd_echo(string argument);
 
 void analy_cmd_mkdir(string option,string argument);
 void cmd_mkdir(string argument);
 
 void analy_cmd_ls(string option,string argument);
 void cmd_ls(string option,string argument);
+
+void cmd_echo(string argument);
+
+void analy_cmd_man(string option,string argument);
 
 
 #endif !_CMD_H

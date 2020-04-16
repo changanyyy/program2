@@ -1,0 +1,19 @@
+
+==================================================
+NAME
+       cp - copy files and directories
+
+SYNOPSIS
+       cp [OPTION] FILE1 FILE2
+       cp [OPTION] DICTIONARY1 DICTIONARY2
+       cp [OPTION] FILE DICTIONARY
+
+DESCRIPTION
+       Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.
+
+       -i, --interactive
+              prompt before overwrite
+
+       -r, --recursive
+              copy directories recursively
+==================================================

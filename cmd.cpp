@@ -41,13 +41,11 @@ void do_cmd(string input,string cmd,string option,string argument,string argumen
     else if(cmd=="echo")cmd_echo(argument);
     else if(cmd=="ls")analy_cmd_ls(option,argument);
     else if(cmd=="mkdir")analy_cmd_mkdir(option,argument);
+    else if(cmd=="man")analy_cmd_man(option,argument);
     else input_error(input);
     return;
 }
 
-void cmd_echo(string argument){
-    cout<<argument<<endl;
-}
 
 void cmd_pwd(){
     char* a=new char[1000];
@@ -61,8 +59,15 @@ void cmd_quit(){
     exit(0);
 }
 
+void cmd_echo(string argument){
+    cout<<argument<<endl;
+}
+
 
 void analy_cmd_wc(string option,string argument){
+    if(!option.empty()&&option!="-c"&&option!="-w"&&option!="-l"){
+        cout<<"wc: invalid option -- \'"<<option<<"\'\nTry \'man wc\' for more information."<<endl;
+    }
     if(option=="-c"){
         int n=cmd_wc_c(argument);
         if(n==-1)return;
@@ -140,7 +145,7 @@ string readfile_cmp(string argument){
 
 void analy_cmd_cat(string option,string argument){
     if(option!="-E"&&option!="-b"&&option!="-s"&&option!="-n"&&!option.empty()){
-        cout<<"cat: invalid option -- \'"<<option<<"\'\nTry \'cat --help\' for more information.\n";
+        cout<<"cat: invalid option -- \'"<<option<<"\'\nTry \'man cat\' for more information.\n";
         return;
     }
     struct stat path;
@@ -292,7 +297,7 @@ void cmd_cp_directory(string argument, string argument_app) {
 
 
 void analy_cmd_mkdir(string option,string argument){
-    if(!option.empty()){cout<<"mkdir: invalid option -- \'"<<option<<"\'\nTry 'mkdir --help' for more information.\n";return;}
+    if(!option.empty()){cout<<"mkdir: invalid option -- \'"<<option<<"\'\nTry \'man mkdir\' for more information.\n";return;}
     if(argument.empty()){cout<<"mkdir: missing operand\nTry 'mkdir --help' for more information.\n";return;}
     else cmd_mkdir(argument);
     return;
@@ -311,7 +316,7 @@ void analy_cmd_ls(string option,string argument){
         argument=a;
     }
     if(!option.empty()&&option!="-a"&&option!="-r"){
-        cout<<"ls: invalid option -- \'"<<option<<"\'Try \'ls --help\' for more information.\n";
+        cout<<"ls: invalid option -- \'"<<option<<"\'Try \'man ls\' for more information.\n";
         return;
     }
     cmd_ls(option,argument);
@@ -341,6 +346,26 @@ void cmd_ls(string option,string argument){
     for(int i=0;i<sub.size();i++){
         cout<<sub[i]<<"  ";
         if(i%8==0&&i>0)cout<<endl;
+    }
+    return;
+}
+
+void analy_cmd_man(string option, string argument){
+    if(argument.empty()){cout<<"What manual page do you want?"<<endl;return;}
+    if(!option.empty()){cout<<"man: invalid option -- \'"<<option<<"\'\nTry \'man man\' for more information.";return;}
+    if(argument=="wc")man_wc();
+    else if(argument=="cmp")man_cmp();
+    else if(argument=="cat")man_cat();
+    else if(argument=="cp")man_cp();
+    else if(argument=="pwd")man_pwd();
+    else if(argument=="ls")man_ls();
+    else if(argument=="mkdir")man_mkdir();
+    else if(argument=="echo")man_echo();
+    else if(argument=="cd")man_cd();
+    else if(argument=="man")man_man();
+    else{
+        cout<<"No manual entry for "<<argument<<endl;
+        return;
     }
     return;
 }
