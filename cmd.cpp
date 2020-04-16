@@ -39,6 +39,7 @@ void do_cmd(string input,string cmd,string option,string argument,string argumen
     else if(cmd=="cp")analy_cmd_cp(option,argument,argument_app);
     else if(cmd=="pwd")cmd_pwd();
     else if(cmd=="echo")cmd_echo(argument);
+    else if(cmd=="cd")analy_cmd_cd(option,argument);
     else if(cmd=="ls")analy_cmd_ls(option,argument);
     else if(cmd=="mkdir")analy_cmd_mkdir(option,argument);
     else if(cmd=="man")analy_cmd_man(option,argument);
@@ -347,6 +348,7 @@ void cmd_ls(string option,string argument){
         cout<<sub[i]<<"  ";
         if(i%8==0&&i>0)cout<<endl;
     }
+    cout<<endl;
     return;
 }
 
@@ -366,6 +368,20 @@ void analy_cmd_man(string option, string argument){
     else{
         cout<<"No manual entry for "<<argument<<endl;
         return;
+    }
+    return;
+}
+
+
+void analy_cmd_cd(string option,string argument){
+    if(!option.empty()){cout<<"cd: "<<option<<": invalid option\nTry man cd for more information\n";return ;}
+    else {
+        struct stat s;
+        stat(argument.c_str(),&s);
+        if(!S_ISDIR(s.st_mode)&&!S_ISREG(s.st_mode)){cout<<"bash: cd: "<<argument<<": No such file or directtory\n";return;}
+        else if(!S_ISDIR(s.st_mode)){cout<<"bash: cd: "<<argument<<": Not a directory";return;}
+        int a=chdir(argument.c_str());
+        if(a==-1){cout<<"bash: cd: "<<argument<<": No such file or directory";}
     }
     return;
 }
