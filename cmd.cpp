@@ -355,7 +355,7 @@ void cmd_ls(string option,string argument){
 
 void analy_cmd_man(string option, string argument){
     if(argument.empty()){cout<<"What manual page do you want?"<<endl;return;}
-    if(!option.empty()){cout<<"man: invalid option -- \'"<<option<<"\'\nTry \'man man\' for more information.";return;}
+    if(!option.empty()){cout<<"man: invalid option -- \'"<<option<<"\'\nTry \'man man\' for more information.\n";return;}
     if(argument=="wc")man_wc();
     else if(argument=="cmp")man_cmp();
     else if(argument=="cat")man_cat();
@@ -380,9 +380,9 @@ void analy_cmd_cd(string option,string argument){
         struct stat s;
         stat(argument.c_str(),&s);
         if(!S_ISDIR(s.st_mode)&&!S_ISREG(s.st_mode)){cout<<"bash: cd: "<<argument<<": No such file or directtory\n";return;}
-        else if(!S_ISDIR(s.st_mode)){cout<<"bash: cd: "<<argument<<": Not a directory";return;}
+        else if(!S_ISDIR(s.st_mode)){cout<<"bash: cd: "<<argument<<": Not a directory\n";return;}
         int a=chdir(argument.c_str());
-        if(a==-1){cout<<"bash: cd: "<<argument<<": No such file or directory";}
+        if(a==-1){cout<<"bash: cd: "<<argument<<": No such file or directory\n";}
     }
     return;
 }
