@@ -1,0 +1,11 @@
+
+==================================================
+NAME
+       sh - read *.sh and conduct the commands in it
+
+SYNOPSIS
+       sh *.sh
+
+DESCRIPTION
+       read the *.sh file and conduct the commands in it,one command one line!
+==================================================

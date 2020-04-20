@@ -91,3 +91,8 @@ void man_man(){
     cmd_cat(option,"man.txt");
     return;
 }
+void man_sh(){
+    string option;
+    cmd_cat(option,"sh.txt");
+    return;
+}

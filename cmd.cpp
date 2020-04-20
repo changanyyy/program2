@@ -366,6 +366,7 @@ void analy_cmd_man(string option, string argument){
     else if(argument=="echo")man_echo();
     else if(argument=="cd")man_cd();
     else if(argument=="man")man_man();
+    else if(argument=="sh")man_sh();
     else{
         cout<<"No manual entry for "<<argument<<endl;
         return;

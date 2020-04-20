@@ -23,6 +23,7 @@ void man_ls();
 void man_mkdir();
 void man_cd();
 void man_man();
+void man_sh();
 
 
 
